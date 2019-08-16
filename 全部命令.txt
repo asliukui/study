@@ -1,0 +1,157 @@
+zookeeper:
+/export/servers/zookeeper-3.4.5-cdh5.14.0/bin/zkServer.sh start		启动
+/export/servers/zookeeper-3.4.5-cdh5.14.0/bin/zkServer.sh stop		关闭
+/export/servers/zookeeper-3.4.5-cdh5.14.0/bin/zkServer.sh status	状态
+
+------------------------------------------
+
+Redis 端口号 6379
+启动Redis    cd /export/servers/redis/bin/
+                   ./redis-server ../conf/redis_6379.conf
+                   ps -ef|grep redis 
+                   cd /export/servers/redis/bin/
+                   ./redis-cli -h 192.168.70.103
+                   输入ping   返回Pong 表示成功
+
+Redis 集群启动
+bin/redis-server cluster/7001/7001.confbin/redis-server cluster/7002/7002.confbin/redis-server cluster/7003/7003.conf bin/redis-server cluster/7004/7004.conf bin/redis-server cluster/7005/7005.conf bin/redis-server cluster/7006/7006.conf通过netstat -nltp查看集群状态
+
+-- 将下方的192.168.80.81替换为自己的IP地址bin/redis-cli --cluster create --cluster-replicas 1 [自己的IP]:7001 192.168.80.81:7002 192.168.80.81:7003 192.168.80.81:7004 192.168.80.81:7005 192.168.80.81:7006
+
+测试集群
+bin/redis-cli -c -h 192.168.80.81 -p 7001set hello worldget hello
+------------------------------------------
+Openresty-nginx
+启动：
+/export/servers/openresty/nginx/sbin/./nginx
+重载
+/export/servers/openresty/nginx/sbin/./nginx -s reload 
+
+----------------------------------
+Flink 相关命令
+----
+1.启动集群服务
+./bin/start-cluster.sh
+2.停止集群服务
+./bin/stop-cluster.sh
+3.UI界面:	http://node01:8081
+4.执行任务的两种方式
+4.1、方式1:session
+  #4.1.1、启动Yarn集群（hadoop中的命令，启动）
+  start-yarn.sh  #4.1.2、通过-h参数可以查看yarn-session的参数功能  bin/yarn-session.sh -h  #4.1.3、使用Flink自带yarn-session.sh脚本开启Yarn会话  bin/yarn-session.sh -n 2 -tm 800 -s 2
+(备注：- -n 表示分配多少个container，这里指的就是多少个taskmanager
+      - -tm 表示每个TaskManager的内存大小
+      - -s 表示每个TaskManager的slots数量)
+  #4.1.4、提交任务
+  bin/flink run examples/batch/WordCount.jar
+  #4.1.5、停止当前任务
+  yarn application -kill application_id(该id在yarn资源管理界面上查看，http://node01:8088)
+----
+4.2、方式2:job
+bin/flink run -m yarn-cluster -yn 2 ./examples/batch/WordCount.jar
+
+
+-------------------------------------
+
+启动SolrCloud:
+cd /export/servers/solr/
+
+启动Kafka
+cd /export/servers/kafka_2.11-1.0.0/bin/
+nohup ./kafka-server-start.sh /export/servers/kafka_2.11-1.0.0/config/server.properties 2>&1 &
+消息接收:
+./kafka-console-consumer.sh --zookeeper bigdata26-1:2181 --topic news
+创建:
+./kafka-topics.sh --create --zookeeper bigdata26-1:2181 --replication-factor 2 --partitions 3 --topic news
+模拟生产者
+./kafka-console-producer.sh --broker-list bigdata26-1:9092 --topic keywords
+查看topic列表
+kafka-topics.sh --list --zookeeper node01:2181
+删除topic
+kafka-topics.sh --delete --zookeeper node1:2181 --topic my-kafka-topic
+
+
+crontab在线生成器 定时任务时间的指数
+
+
+cdh1  00:50:56:3A:AA:CF
+cdh2  00:50:56:39:16:7E
+cdh3  00:50:56:23:AC:F3
+vim /etc/sysconfig/network-scripts/ifcfg-eth0
+
+启动与关闭oozie服务
+cd /export/servers/oozie-4.1.0-cdh5.14.0
+bin/oozied.sh start 
+bin/oozied.sh stop
+
+-------------------------
+1、集群启动hbase：
+start-hbase.sh
+
+2、单节点启动：
+2.1、启动HMaster命令：hbase-daemon.sh start master
+2.2、启动HRegionServer命令：hbase-daemon.sh start regionserver
+
+3、为了解决HMaster单点故障问题，我们可以在node02和node03机器上面都可以启动HMaster节点的进程，以实现HMaster的高可用。
+在除主节点以外的其他节点启动：hbase-daemon.sh start master
+
+4、浏览器页面访问
+http://node01:60010/master-status
+
+5、进入HBase shell操作
+bin/hbase shell
+
+6、shell 命令
+	6.1删除表
+	disable '表名'
+	drop '表名'
+	6.1.1 批量删除：例如存在表 a1,a2,a3,a4
+	disable_all 'a.*'	=>	Disable the above 4 tables (y/n)?y
+	drop_all 'a.*'		=>	Drop the above 4 tables (y/n)?y
+
+	6.2 查询表列表
+	list
+
+
+
+---------------------------------------------
+Hive
+
+hive三种交互方式
+1、Hive交互shell
+	bin/hive
+	hive (default)> show databases;
+2、Hive JDBC服务
+	2.1、启动hiveserver2服务
+	nohup bin/hive --service metastore &
+	nohup bin/hive --service hiveserver2  &
+	2.2、beeline连接hiveserver2
+	bin/beeline
+	beeline> !connect jdbc:hive2://node03:10000
+3、Hive命令
+	使用 -e 参数来直接执行sql语句
+	bin/hive -e "use myhive;select * from test;"
+
+---------------------------------------------
+
+
+启动hadoop
+cd /export/servers/hadoop-2.6.0-cdh5.14.0/sbin/start-all.sh
+sbin/start-dfs.sh
+sbin/start-yarn.sh
+sbin/mr-jobhistory-daemon.sh start historyserver
+
+sbin/hadoop-daemons.sh --config .. --hostname .. start namenode ...
+sbin/hadoop-daemons.sh --config .. --hostname .. start datanode ...
+sbin/hadoop-daemons.sh --config .. --hostname .. start sescondarynamenode ...
+sbin/hadoop-daemons.sh --config .. --hostname .. start zkfc ... 
+
+
+启动spark
+sbin/start-all.sh
+sbin/stop-all.sh
+
+
+
+
+
