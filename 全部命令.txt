@@ -13,6 +13,7 @@ Redis 端口号 6379
                    ./redis-cli -h 192.168.70.103
                    输入ping   返回Pong 表示成功
 
+
 Redis 集群启动
 bin/redis-server cluster/7001/7001.confbin/redis-server cluster/7002/7002.confbin/redis-server cluster/7003/7003.conf bin/redis-server cluster/7004/7004.conf bin/redis-server cluster/7005/7005.conf bin/redis-server cluster/7006/7006.conf通过netstat -nltp查看集群状态
 
