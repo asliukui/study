@@ -1,78 +1,93 @@
 zookeeper:
-/export/servers/zookeeper-3.4.5-cdh5.14.0/bin/zkServer.sh start		Æô¶¯
-/export/servers/zookeeper-3.4.5-cdh5.14.0/bin/zkServer.sh stop		¹Ø±Õ
-/export/servers/zookeeper-3.4.5-cdh5.14.0/bin/zkServer.sh status	×´Ì¬
+/export/servers/zookeeper-3.4.5-cdh5.14.0/bin/zkServer.sh start		å¯åŠ¨
+/export/servers/zookeeper-3.4.5-cdh5.14.0/bin/zkServer.sh stop		å…³é—­
+/export/servers/zookeeper-3.4.5-cdh5.14.0/bin/zkServer.sh status	çŠ¶æ€
+
 
 ------------------------------------------
 
-Redis ¶Ë¿ÚºÅ 6379
-Æô¶¯Redis    cd /export/servers/redis/bin/
+Redis ç«¯å£å· 6379
+å¯åŠ¨Redis    cd /export/servers/redis/bin/
                    ./redis-server ../conf/redis_6379.conf
                    ps -ef|grep redis 
                    cd /export/servers/redis/bin/
                    ./redis-cli -h 192.168.70.103
-                   ÊäÈëping   ·µ»ØPong ±íÊ¾³É¹¦
+                   è¾“å…¥ping   è¿”å›Pong è¡¨ç¤ºæˆåŠŸ
 
 
-Redis ¼¯ÈºÆô¶¯
-bin/redis-server cluster/7001/7001.confbin/redis-server cluster/7002/7002.confbin/redis-server cluster/7003/7003.conf bin/redis-server cluster/7004/7004.conf bin/redis-server cluster/7005/7005.conf bin/redis-server cluster/7006/7006.confÍ¨¹ınetstat -nltp²é¿´¼¯Èº×´Ì¬
+Redis é›†ç¾¤å¯åŠ¨
+bin/redis-server cluster/7001/7001.conf
+bin/redis-server cluster/7002/7002.conf
+bin/redis-server cluster/7003/7003.conf 
+bin/redis-server cluster/7004/7004.conf 
+bin/redis-server cluster/7005/7005.conf 
+bin/redis-server cluster/7006/7006.conf
 
--- ½«ÏÂ·½µÄ192.168.80.81Ìæ»»Îª×Ô¼ºµÄIPµØÖ·bin/redis-cli --cluster create --cluster-replicas 1 [×Ô¼ºµÄIP]:7001 192.168.80.81:7002 192.168.80.81:7003 192.168.80.81:7004 192.168.80.81:7005 192.168.80.81:7006
+é€šè¿‡netstat -nltpæŸ¥çœ‹é›†ç¾¤çŠ¶æ€
 
-²âÊÔ¼¯Èº
-bin/redis-cli -c -h 192.168.80.81 -p 7001set hello worldget hello
+-- å°†ä¸‹æ–¹çš„192.168.80.81æ›¿æ¢ä¸ºè‡ªå·±çš„IPåœ°å€
+bin/redis-cli --cluster create --cluster-replicas 1 [è‡ªå·±çš„IP]:7001 192.168.80.81:7002 192.168.80.81:7003 192.168.80.81:7004 192.168.80.81:7005 192.168.80.81:7006
+
+æµ‹è¯•é›†ç¾¤
+bin/redis-cli -c -h 192.168.80.81 -p 7001
+set hello world
+get hello
 ------------------------------------------
 Openresty-nginx
-Æô¶¯£º
+å¯åŠ¨ï¼š
 /export/servers/openresty/nginx/sbin/./nginx
-ÖØÔØ
+é‡è½½
 /export/servers/openresty/nginx/sbin/./nginx -s reload 
 
 ----------------------------------
-Flink Ïà¹ØÃüÁî
+Flink ç›¸å…³å‘½ä»¤
 ----
-1.Æô¶¯¼¯Èº·şÎñ
+1.å¯åŠ¨é›†ç¾¤æœåŠ¡
 ./bin/start-cluster.sh
-2.Í£Ö¹¼¯Èº·şÎñ
+2.åœæ­¢é›†ç¾¤æœåŠ¡
 ./bin/stop-cluster.sh
-3.UI½çÃæ:	http://node01:8081
-4.Ö´ĞĞÈÎÎñµÄÁ½ÖÖ·½Ê½
-4.1¡¢·½Ê½1:session
-  #4.1.1¡¢Æô¶¯Yarn¼¯Èº£¨hadoopÖĞµÄÃüÁî£¬Æô¶¯£©
-  start-yarn.sh  #4.1.2¡¢Í¨¹ı-h²ÎÊı¿ÉÒÔ²é¿´yarn-sessionµÄ²ÎÊı¹¦ÄÜ  bin/yarn-session.sh -h  #4.1.3¡¢Ê¹ÓÃFlink×Ô´øyarn-session.sh½Å±¾¿ªÆôYarn»á»°  bin/yarn-session.sh -n 2 -tm 800 -s 2
-(±¸×¢£º- -n ±íÊ¾·ÖÅä¶àÉÙ¸öcontainer£¬ÕâÀïÖ¸µÄ¾ÍÊÇ¶àÉÙ¸ötaskmanager
-      - -tm ±íÊ¾Ã¿¸öTaskManagerµÄÄÚ´æ´óĞ¡
-      - -s ±íÊ¾Ã¿¸öTaskManagerµÄslotsÊıÁ¿)
-  #4.1.4¡¢Ìá½»ÈÎÎñ
+3.UIç•Œé¢:	http://node01:8081
+4.æ‰§è¡Œä»»åŠ¡çš„ä¸¤ç§æ–¹å¼
+4.1ã€æ–¹å¼1:session
+  #4.1.1ã€å¯åŠ¨Yarné›†ç¾¤ï¼ˆhadoopä¸­çš„å‘½ä»¤ï¼Œå¯åŠ¨ï¼‰
+  start-yarn.sh
+  #4.1.2ã€é€šè¿‡-hå‚æ•°å¯ä»¥æŸ¥çœ‹yarn-sessionçš„å‚æ•°åŠŸèƒ½
+  bin/yarn-session.sh -h
+  #4.1.3ã€ä½¿ç”¨Flinkè‡ªå¸¦yarn-session.shè„šæœ¬å¼€å¯Yarnä¼šè¯
+  bin/yarn-session.sh -n 2 -tm 800 -s 2
+(å¤‡æ³¨ï¼š- -n è¡¨ç¤ºåˆ†é…å¤šå°‘ä¸ªcontainerï¼Œè¿™é‡ŒæŒ‡çš„å°±æ˜¯å¤šå°‘ä¸ªtaskmanager
+      - -tm è¡¨ç¤ºæ¯ä¸ªTaskManagerçš„å†…å­˜å¤§å°
+      - -s è¡¨ç¤ºæ¯ä¸ªTaskManagerçš„slotsæ•°é‡)
+  #4.1.4ã€æäº¤ä»»åŠ¡
   bin/flink run examples/batch/WordCount.jar
-  #4.1.5¡¢Í£Ö¹µ±Ç°ÈÎÎñ
-  yarn application -kill application_id(¸ÃidÔÚyarn×ÊÔ´¹ÜÀí½çÃæÉÏ²é¿´£¬http://node01:8088)
+  #4.1.5ã€åœæ­¢å½“å‰ä»»åŠ¡
+  yarn application -kill application_id(è¯¥idåœ¨yarnèµ„æºç®¡ç†ç•Œé¢ä¸ŠæŸ¥çœ‹ï¼Œhttp://node01:8088)
 ----
-4.2¡¢·½Ê½2:job
+4.2ã€æ–¹å¼2:job
 bin/flink run -m yarn-cluster -yn 2 ./examples/batch/WordCount.jar
 
 
 -------------------------------------
 
-Æô¶¯SolrCloud:
+å¯åŠ¨SolrCloud:
 cd /export/servers/solr/
 
-Æô¶¯Kafka
+å¯åŠ¨Kafka
 cd /export/servers/kafka_2.11-1.0.0/bin/
 nohup ./kafka-server-start.sh /export/servers/kafka_2.11-1.0.0/config/server.properties 2>&1 &
-ÏûÏ¢½ÓÊÕ:
+æ¶ˆæ¯æ¥æ”¶:
 ./kafka-console-consumer.sh --zookeeper bigdata26-1:2181 --topic news
-´´½¨:
+åˆ›å»º:
 ./kafka-topics.sh --create --zookeeper bigdata26-1:2181 --replication-factor 2 --partitions 3 --topic news
-Ä£ÄâÉú²úÕß
+æ¨¡æ‹Ÿç”Ÿäº§è€…
 ./kafka-console-producer.sh --broker-list bigdata26-1:9092 --topic keywords
-²é¿´topicÁĞ±í
+æŸ¥çœ‹topicåˆ—è¡¨
 kafka-topics.sh --list --zookeeper node01:2181
-É¾³ıtopic
+åˆ é™¤topic
 kafka-topics.sh --delete --zookeeper node1:2181 --topic my-kafka-topic
 
 
-crontabÔÚÏßÉú³ÉÆ÷ ¶¨Ê±ÈÎÎñÊ±¼äµÄÖ¸Êı
+crontabåœ¨çº¿ç”Ÿæˆå™¨ å®šæ—¶ä»»åŠ¡æ—¶é—´çš„æŒ‡æ•°
 
 
 cdh1  00:50:56:3A:AA:CF
@@ -80,37 +95,37 @@ cdh2  00:50:56:39:16:7E
 cdh3  00:50:56:23:AC:F3
 vim /etc/sysconfig/network-scripts/ifcfg-eth0
 
-Æô¶¯Óë¹Ø±Õoozie·şÎñ
+å¯åŠ¨ä¸å…³é—­oozieæœåŠ¡
 cd /export/servers/oozie-4.1.0-cdh5.14.0
 bin/oozied.sh start 
 bin/oozied.sh stop
 
 -------------------------
-1¡¢¼¯ÈºÆô¶¯hbase£º
+1ã€é›†ç¾¤å¯åŠ¨hbaseï¼š
 start-hbase.sh
 
-2¡¢µ¥½ÚµãÆô¶¯£º
-2.1¡¢Æô¶¯HMasterÃüÁî£ºhbase-daemon.sh start master
-2.2¡¢Æô¶¯HRegionServerÃüÁî£ºhbase-daemon.sh start regionserver
+2ã€å•èŠ‚ç‚¹å¯åŠ¨ï¼š
+2.1ã€å¯åŠ¨HMasterå‘½ä»¤ï¼šhbase-daemon.sh start master
+2.2ã€å¯åŠ¨HRegionServerå‘½ä»¤ï¼šhbase-daemon.sh start regionserver
 
-3¡¢ÎªÁË½â¾öHMasterµ¥µã¹ÊÕÏÎÊÌâ£¬ÎÒÃÇ¿ÉÒÔÔÚnode02ºÍnode03»úÆ÷ÉÏÃæ¶¼¿ÉÒÔÆô¶¯HMaster½ÚµãµÄ½ø³Ì£¬ÒÔÊµÏÖHMasterµÄ¸ß¿ÉÓÃ¡£
-ÔÚ³ıÖ÷½ÚµãÒÔÍâµÄÆäËû½ÚµãÆô¶¯£ºhbase-daemon.sh start master
+3ã€ä¸ºäº†è§£å†³HMasterå•ç‚¹æ•…éšœé—®é¢˜ï¼Œæˆ‘ä»¬å¯ä»¥åœ¨node02å’Œnode03æœºå™¨ä¸Šé¢éƒ½å¯ä»¥å¯åŠ¨HMasterèŠ‚ç‚¹çš„è¿›ç¨‹ï¼Œä»¥å®ç°HMasterçš„é«˜å¯ç”¨ã€‚
+åœ¨é™¤ä¸»èŠ‚ç‚¹ä»¥å¤–çš„å…¶ä»–èŠ‚ç‚¹å¯åŠ¨ï¼šhbase-daemon.sh start master
 
-4¡¢ä¯ÀÀÆ÷Ò³Ãæ·ÃÎÊ
+4ã€æµè§ˆå™¨é¡µé¢è®¿é—®
 http://node01:60010/master-status
 
-5¡¢½øÈëHBase shell²Ù×÷
+5ã€è¿›å…¥HBase shellæ“ä½œ
 bin/hbase shell
 
-6¡¢shell ÃüÁî
-	6.1É¾³ı±í
-	disable '±íÃû'
-	drop '±íÃû'
-	6.1.1 ÅúÁ¿É¾³ı£ºÀıÈç´æÔÚ±í a1,a2,a3,a4
+6ã€shell å‘½ä»¤
+	6.1åˆ é™¤è¡¨
+	disable 'è¡¨å'
+	drop 'è¡¨å'
+	6.1.1 æ‰¹é‡åˆ é™¤ï¼šä¾‹å¦‚å­˜åœ¨è¡¨ a1,a2,a3,a4
 	disable_all 'a.*'	=>	Disable the above 4 tables (y/n)?y
 	drop_all 'a.*'		=>	Drop the above 4 tables (y/n)?y
 
-	6.2 ²éÑ¯±íÁĞ±í
+	6.2 æŸ¥è¯¢è¡¨åˆ—è¡¨
 	list
 
 
@@ -118,25 +133,25 @@ bin/hbase shell
 ---------------------------------------------
 Hive
 
-hiveÈıÖÖ½»»¥·½Ê½
-1¡¢Hive½»»¥shell
+hiveä¸‰ç§äº¤äº’æ–¹å¼
+1ã€Hiveäº¤äº’shell
 	bin/hive
 	hive (default)> show databases;
-2¡¢Hive JDBC·şÎñ
-	2.1¡¢Æô¶¯hiveserver2·şÎñ
+2ã€Hive JDBCæœåŠ¡
+	2.1ã€å¯åŠ¨hiveserver2æœåŠ¡
 	nohup bin/hive --service metastore &
 	nohup bin/hive --service hiveserver2  &
-	2.2¡¢beelineÁ¬½Óhiveserver2
+	2.2ã€beelineè¿æ¥hiveserver2
 	bin/beeline
 	beeline> !connect jdbc:hive2://node03:10000
-3¡¢HiveÃüÁî
-	Ê¹ÓÃ -e ²ÎÊıÀ´Ö±½ÓÖ´ĞĞsqlÓï¾ä
+3ã€Hiveå‘½ä»¤
+	ä½¿ç”¨ -e å‚æ•°æ¥ç›´æ¥æ‰§è¡Œsqlè¯­å¥
 	bin/hive -e "use myhive;select * from test;"
 
 ---------------------------------------------
 
 
-Æô¶¯hadoop
+å¯åŠ¨hadoop
 cd /export/servers/hadoop-2.6.0-cdh5.14.0/sbin/start-all.sh
 sbin/start-dfs.sh
 sbin/start-yarn.sh
@@ -148,7 +163,7 @@ sbin/hadoop-daemons.sh --config .. --hostname .. start sescondarynamenode ...
 sbin/hadoop-daemons.sh --config .. --hostname .. start zkfc ... 
 
 
-Æô¶¯spark
+å¯åŠ¨spark
 sbin/start-all.sh
 sbin/stop-all.sh
 
